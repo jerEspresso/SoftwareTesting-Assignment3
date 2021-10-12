@@ -14,7 +14,7 @@ class HelloSeleniumFacebook{
 	
 	@Test
 	void checkFacebookTitle() {
-        System.setProperty("webdriver.gecko.driver","D:\\webdriver\\geckodriver.exe");
+        System.setProperty("webdriver.gecko.driver","geckodriver.exe");
         WebDriver driver = new FirefoxDriver();
         String baseUrl = "http://www.facebook.com";
         driver.get(baseUrl);
@@ -29,7 +29,7 @@ class HelloSeleniumFacebook{
     	// Of course G:\\drivers\\geckodriver.exe should be replaced with
         // the url of where you stored this.
 
-        System.setProperty("webdriver.gecko.driver","D:\\webdriver\\geckodriver.exe");
+        System.setProperty("webdriver.gecko.driver","geckodriver.exe");
         WebDriver driver = new FirefoxDriver();
         String baseUrl = "http://www.facebook.com";
         String tagName = "";

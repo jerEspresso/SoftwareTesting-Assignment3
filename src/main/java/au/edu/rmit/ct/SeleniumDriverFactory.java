@@ -10,7 +10,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class SeleniumDriverFactory  {
 
-    // please rename s3214321 this to your own student ID
     SeleniumDriverFactory(){
         System.setProperty("webdriver.gecko.driver","geckodriver.exe");
     }
