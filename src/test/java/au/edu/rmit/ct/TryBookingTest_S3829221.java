@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 // Update this class name by replacing S3214321 with your student ID
-class TryBookingTest_S3214321 {
+class TryBookingTest_S3829221 {
     WebDriver myDriver;
 
 
