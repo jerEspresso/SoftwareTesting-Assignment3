@@ -13,19 +13,53 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
-// Update this class name by replacing S3214321 with your student ID
 class TryBookingTest_S3829221 {
-    WebDriver myDriver;
+    static WebDriver myDriver;
+    static List<String> titleList;
+
+    // Store featured event titles in list
+    @BeforeAll
+    static void setUpBeforeClass() throws InterruptedException {
+        SeleniumDriverFactory sdf = new SeleniumDriverFactory();
+        myDriver = sdf.getDriver();
+
+        String url = "https://www.trybooking.com/book/search";
+        myDriver.get(url);
+        Thread.sleep(3000);
+
+        WebElement featEventSect = myDriver.findElement(By.id("FeaturedEventsSection"));
+        List<WebElement> featEvents = featEventSect.findElements(By.tagName("h2"));
+
+        titleList = new ArrayList<>();
+        for (WebElement featEvent : featEvents)
+            titleList.add(featEvent.getText());
+
+        System.out.println("Feature event titles: ");
+        for (String title : titleList) {
+            System.out.println(title);
+        }
+
+        myDriver.quit();
+    }
+
+    @BeforeEach
+    void setUp() {
+        SeleniumDriverFactory sdf = new SeleniumDriverFactory();
+        myDriver = sdf.getDriver();
+    }
+
+    @AfterEach
+    void tearDown() {
+        myDriver.quit();
+    }
 
     @Test
-    // @Disabled
     @Order(0)
     @DisplayName("Sanity test only")
     void sanityTest() {
@@ -35,15 +69,36 @@ class TryBookingTest_S3829221 {
         assertEquals("Buy tickets | TryBooking Australia", myDriver.getTitle());
     }
 
-    @BeforeEach
-    void setUp() {
-        SeleniumDriverFactory sdf = new SeleniumDriverFactory();
-        this.myDriver = sdf.getDriver();
+    @Test
+    @Order(1)
+    @DisplayName("Check if featured event titles match")
+    void checkFeaturedEvent() throws InterruptedException {
+        String url = "https://www.trybooking.com/book/search";
+        myDriver.get(url);
+        Thread.sleep(3000);
+
+        WebElement featEventSect = myDriver.findElement(By.id("FeaturedEventsSection"));
+        List<WebElement> featEvents = featEventSect.findElements(By.tagName("h2"));
+
+        for (WebElement featEvent : featEvents) {
+            assertTrue(this.titleList.contains(featEvent.getText()));
+        }
     }
 
-    @AfterEach
-    void tearDown() {
-        //myDriver.close();
-        myDriver.quit();
+    @Test
+    @Order(2)
+    @DisplayName("Check if any cancelled event appears")
+    void checkCancelledEvent() throws InterruptedException {
+        String url = "https://www.trybooking.com/book/search";
+        myDriver.get(url);
+        Thread.sleep(3000);
+
+        WebElement featEventSect = myDriver.findElement(By.id("FeaturedEventsSection"));
+        List<WebElement> featEvents = featEventSect.findElements(By.tagName("h2"));
+
+        for (WebElement featEvent : featEvents) {
+            if (featEvent.getText().toLowerCase().contains("cancel"))
+                fail("Event '" + featEvent.getText() + "' is cancelled.");
+        }
     }
 }
