@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,8 +98,64 @@ class TryBookingTest_S3829221 {
         List<WebElement> featEvents = featEventSect.findElements(By.tagName("h2"));
 
         for (WebElement featEvent : featEvents) {
-            if (featEvent.getText().toLowerCase().contains("cancel"))
+            if (featEvent.getText().toLowerCase().contains("cancelled"))
                 fail("Event '" + featEvent.getText() + "' is cancelled.");
         }
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Book into an event")
+    void bookEvent() throws InterruptedException {
+        String url = "https://www.trybooking.com/events/landing?eid=818286&";
+        myDriver.get(url);
+
+        // Click on the select button
+        WebElement sessionTable = myDriver.findElement(By.id("sessions-table"));
+        sessionTable.findElement(By.tagName("button")).click();
+        Thread.sleep(3000);
+
+        // Input the number of tickets
+        myDriver.findElement(By.id("quantity0")).clear();
+        myDriver.findElement(By.id("quantity0")).sendKeys("1");
+        myDriver.findElement(By.id("Next_addToCartBtn")).click();
+        Thread.sleep(3000);
+
+        // Fill in the booking details
+        Select day = new Select(myDriver.findElement(By.id("bookingDataField_546337_day")));
+        day.selectByVisibleText("5");
+
+        Select month = new Select(myDriver.findElement(By.id("bookingDataField_546337_month")));
+        month.selectByVisibleText("Nov");
+
+        Select year = new Select(myDriver.findElement(By.id("bookingDataField_546337_year")));
+        year.selectByVisibleText("2021");
+
+        Select cam = new Select(myDriver.findElement(By.id("bookingDataField_546338")));
+        cam.selectByValue("Yes");
+
+        myDriver.findElement(By.id("bookingDataField_546339")).click();
+        myDriver.findElement(By.xpath("//div[contains(text(), 'FOXIT')]")).click();
+
+        myDriver.findElement(By.id("ticketHolderDetails_Next")).click();
+        Thread.sleep(3000);
+
+        // Fill in the personal details
+        myDriver.findElement(By.id("txtFirstName")).clear();
+        myDriver.findElement(By.id("txtFirstName")).sendKeys("Chenyu");
+
+        myDriver.findElement(By.id("txtLastName")).clear();
+        myDriver.findElement(By.id("txtLastName")).sendKeys("Xiao");
+
+        Select country = new Select(myDriver.findElement(By.id("drpCountry")));
+        country.selectByValue("AU");
+
+        myDriver.findElement(By.id("txtEmailAddress")).clear();
+        myDriver.findElement(By.id("txtEmailAddress")).sendKeys("s3829221@student.rmit.edu.au");
+
+        myDriver.findElement(By.id("txtConfirmEmailAddress")).clear();
+        myDriver.findElement(By.id("txtConfirmEmailAddress")).sendKeys("s3829221@student.rmit.edu.au");
+
+        myDriver.findElement(By.id("btn-purchase-lg")).click();
     }
 }
