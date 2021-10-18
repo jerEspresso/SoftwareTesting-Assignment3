@@ -157,5 +157,28 @@ class TryBookingTest_S3829221 {
         myDriver.findElement(By.id("txtConfirmEmailAddress")).sendKeys("s3829221@student.rmit.edu.au");
 
         myDriver.findElement(By.id("btn-purchase-lg")).click();
+        Thread.sleep(3000);
+
+        // Check booking details in the confirmation page
+        WebElement heading = myDriver.findElement(By.tagName("h1"));
+        assertEquals("transaction successful", heading.getText().toLowerCase());
+
+        WebElement emailDiv = myDriver.findElement(By.xpath("//div[contains(text(), 'Email Address')]"));
+        WebElement emailAddress = emailDiv.findElement(By.tagName("span"));
+        assertEquals("s3829221@student.rmit.edu.au", emailAddress.getText());
+
+        List<WebElement> wes = myDriver.findElements(By.tagName("h5"));
+        boolean isTitleCorrect = false;
+        for (WebElement we : wes) {
+            if (we.getText().equals("RMIT/m2ma Virtual Doughnut Award Ceremony"))
+                isTitleCorrect = true;
+        }
+        assertTrue(isTitleCorrect);
+
+        WebElement attendee = myDriver.findElement(By.className("main-instruction"));
+        assertEquals("Attendee x 1", attendee.getText());
+
+        // If the date and time are correct, no exception will be thrown.
+        WebElement eventDateTime = myDriver.findElement(By.xpath("//div[text()='Monday 1 November 2021 1:30 PM']"));
     }
 }
